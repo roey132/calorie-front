@@ -2,8 +2,9 @@
 
     export let name_input = ''
     export let password_input  = ''
-
-    async function test() {
+    let uuid = ""
+    let login_message = "Enter your username and password"
+    async function attempt_login() {
     const res = await fetch('http://127.0.0.1:8080/api/users/login', {
         method: 'POST',
         headers: {
@@ -19,15 +20,21 @@
                 console.error(`Error: ${res.status} ${res.statusText}`);
                 const errorText = await res.text();
                 console.error(`Error response: ${errorText}`);
+                login_message = "Failed to login, please try again.."
                 return;
             }
 
         const data = await res.json()
 	    console.log(data);
+        uuid = data["UUID"]
+        login_message = "Successfully logged in!";
+        sessionStorage.setItem('user_id', uuid);
     }
-
 </script>
 
-<input bind:value={name_input} placeholder="enter your name" />
-<input bind:value={password_input} placeholder="enter your password" />
-<button on:click={test}>test</button>
+<div>
+    <div>{login_message}</div>
+    <input bind:value={name_input} placeholder="enter your name" /><br>
+    <input bind:value={password_input} placeholder="enter your password" /><br>
+    <button on:click={attempt_login}>login</button>
+</div>
