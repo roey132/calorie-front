@@ -1,10 +1,8 @@
-import { onMount } from 'svelte';
-import { goto } from '$app/navigation';
-
 export async function authenticateUser() {
 	let userId = sessionStorage.getItem('user_id');
+	console.log(userId);
 	if (!userId) {
-		goto('/login');
+		return false;
 	}
 	let headers: { [key: string]: string } = {
 		'Content-Type': 'application/json'
@@ -17,13 +15,12 @@ export async function authenticateUser() {
 		method: 'GET',
 		headers: headers
 	});
-	console.log(res);
 	if (!res.ok) {
 		// If the response is not OK, log the status and text
 		console.error(`Error: ${res.status} ${res.statusText}`);
 		const errorText = await res.text();
 		console.error(`Error response: ${errorText}`);
-		goto('/login');
+		return res.status;
 	}
 	return true;
 }

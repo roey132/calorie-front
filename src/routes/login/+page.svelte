@@ -1,4 +1,8 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { authenticateUser } from '$lib/auth';
+	import { onMount } from 'svelte';
+
 	export let name_input = '';
 	export let password_input = '';
 	let uuid = '';
@@ -28,7 +32,22 @@
 		uuid = data['UUID'];
 		login_message = 'Successfully logged in!';
 		sessionStorage.setItem('user_id', uuid);
+		goto('/dashboard');
 	}
+	onMount(async () => {
+		let authenticated: boolean = false;
+		await authenticateUser()
+			.then((value) => {
+				authenticated = true;
+			})
+			.catch((error) => {
+				console.log('Promise rejected with error:' + error);
+			});
+		console.log('authenticated is:' + authenticated);
+		if (authenticated) {
+			goto('/dashboard');
+		}
+	});
 </script>
 
 <div>
