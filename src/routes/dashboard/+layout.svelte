@@ -7,9 +7,9 @@
 	onMount(async () => {
 		await authenticateUser()
 			.then((value) => {
-				console.log('this run ' + authenticated);
-
-				authenticated = true;
+				if (value == true) {
+					authenticated = true;
+				}
 			})
 			.catch((error) => {
 				console.log('Promise rejected with error:' + error);
