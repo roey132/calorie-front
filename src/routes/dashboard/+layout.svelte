@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { authenticateUser } from '$lib/auth';
 	import { goto } from '$app/navigation';
+
 	let authenticated: Boolean = false;
 
 	onMount(async () => {
