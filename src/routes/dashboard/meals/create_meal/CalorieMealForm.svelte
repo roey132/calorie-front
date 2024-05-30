@@ -7,17 +7,17 @@
 
 	let calories: number;
 	let date: string;
-	let meal_name: string;
-	let meal_note: string;
+	let name: string;
+	let note: string;
+	let createButtonDisabled = false;
 
 	let missing_fields = false;
 	async function create_calorie_meal() {
-		let create_meal_button: any = document.getElementById('create_meal_button');
-		create_meal_button.disabled = true;
+		createButtonDisabled = true;
 
 		if (date == null || calories == null) {
 			missing_fields = true;
-			create_meal_button.disabled = false;
+			createButtonDisabled = false;
 			return;
 		}
 		let res = await fetch('/rust/api/meals/meal/create/calories', {
@@ -28,20 +28,21 @@
 			body: JSON.stringify({
 				calories: calories,
 				meal_date: date,
-				meal_name: meal_name,
-				meal_note: meal_note
+				meal_name: name,
+				meal_note: note
 			})
 		});
 		if (!res.ok) {
 			console.error(`Error: ${res.status} ${res.statusText}`);
 			const errorText = await res.text();
 			console.error(`Error response: ${errorText}`);
+			createButtonDisabled = false;
 			return res.status;
 		}
 		dispatch('meal_sent');
 	}
 	onMount(() => {
-		let picker = document.getElementById('datePicker');
+		let picker = document.getElementById('datePicker') as HTMLInputElement;
 		if (picker != null && picker instanceof HTMLInputElement) {
 			let today = new Date();
 			date = today.toISOString().split('T')[0];
@@ -58,7 +59,9 @@
 {/if}
 <input bind:value={calories} type="number" placeholder="enter calorie count" /><br />
 <input bind:value={date} id="datePicker" type="date" /><br />
-<input bind:value={meal_name} type="text" placeholder="enter meal name (Optional)" /><br />
-<input bind:value={meal_note} type="text" placeholder="enter meal note (Optional)" /><br />
+<input bind:value={name} type="text" placeholder="enter meal name (Optional)" /><br />
+<input bind:value={note} type="text" placeholder="enter meal note (Optional)" /><br />
 
-<button on:click={create_calorie_meal} id="create_meal_button">create meal</button>
+<button disabled={createButtonDisabled} on:click={create_calorie_meal} id="create_meal_button"
+	>create meal</button
+>

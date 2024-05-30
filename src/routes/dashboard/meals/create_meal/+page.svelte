@@ -1,10 +1,10 @@
 <script lang="ts">
 	import CalorieMealForm from './CalorieMealForm.svelte';
 	let types = ['Calories', 'Product', 'Measure'];
-	let selected_type = '';
+	let selectedType = '';
 
 	export function meal_sent() {
-		selected_type = '';
+		selectedType = '';
 	}
 </script>
 
@@ -12,19 +12,19 @@
 {#each types as type}
 	<button
 		on:click={() => {
-			selected_type = type;
+			selectedType = type;
 		}}>{type}</button
 	>
 {/each}
 
-{#if selected_type === 'Calories'}
+{#if selectedType === 'Calories'}
 	<CalorieMealForm on:meal_sent={meal_sent} />
 {/if}
 
-{#if selected_type === 'Product'}
+{#if selectedType === 'Product'}
 	<div>temp product placeholder</div>
 {/if}
 
-{#if selected_type === 'Measure'}
+{#if selectedType === 'Measure'}
 	<div>temp measure placeholder</div>
 {/if}
