@@ -2,18 +2,20 @@
 	import { goto } from '$app/navigation';
 	import { authenticateUser } from '$lib/auth';
 	import { onMount } from 'svelte';
-	import { userIdStore } from '$lib/stores';
 
-	export let name_input = '';
-	export let password_input = '';
-	let uuid = '';
+	export let name_input: string = '';
+	export let password_input: string = '';
 	let login_message = 'Enter your username and password';
+
 	async function attempt_login() {
 		const res = await fetch('/rust/api/users/login', {
 			method: 'POST',
+			headers: {
+				'content-type': 'application/json'
+			},
 			body: JSON.stringify({
-				password: password_input,
-				username: name_input
+				username: name_input,
+				password: password_input
 			})
 		});
 		if (!res.ok) {
@@ -26,17 +28,13 @@
 		}
 
 		const data = await res.json();
-		console.log(data);
-		uuid = data['UUID'];
+		let uuid = data['UUID'];
 		login_message = 'Successfully logged in!';
 
 		var expiration_date = new Date();
 		expiration_date.setFullYear(expiration_date.getFullYear() + 2);
 		document.cookie =
-			'user_id=' +
-			uuid +
-			'; path=/dashboard; SameSite=none; expires=' +
-			expiration_date.toUTCString();
+			'user_id=' + uuid + '; path=/; SameSite=none; expires=' + expiration_date.toUTCString();
 
 		goto('/dashboard');
 	}
