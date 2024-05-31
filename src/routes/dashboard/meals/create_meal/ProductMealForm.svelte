@@ -27,15 +27,18 @@
 			return res.status;
 		}
 
+		let today = new Date();
+		date = today.toISOString().split('T')[0];
+
 		products = await res.json();
-		console.log(products);
 	});
 
 	async function selectProduct(product_id) {
 		selectedProduct = products[product_id];
 		await getMeasures();
 		isProductSelected = true;
-		console.log(selectedProduct);
+		let today = new Date();
+		date = today.toISOString().split('T')[0];
 	}
 
 	async function createMeal() {
@@ -88,7 +91,6 @@
 		}
 
 		selectedProductMeasures = await res.json();
-		console.log(selectedProductMeasures);
 	}
 
 	let isMeasureSelected = false;
@@ -101,7 +103,6 @@
 		} else {
 			countInfoText = 'set product grams';
 		}
-		console.log(selectedMeasureId);
 	}
 </script>
 

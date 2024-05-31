@@ -43,7 +43,7 @@
 	}
 	onMount(() => {
 		let picker = document.getElementById('datePicker') as HTMLInputElement;
-		if (picker != null && picker instanceof HTMLInputElement) {
+		if (picker != null) {
 			let today = new Date();
 			date = today.toISOString().split('T')[0];
 			picker.valueAsDate = today;
