@@ -39,7 +39,7 @@
 			missing_fields = true;
 			return;
 		}
-		let mealType = '';
+		let mealType;
 		let requestBody = {
 			calories: countInput,
 			meal_date: date,
