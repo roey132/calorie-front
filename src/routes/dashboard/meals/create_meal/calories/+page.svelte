@@ -39,7 +39,7 @@
 			createButtonDisabled = false;
 			return res.status;
 		}
-		dispatch('meal_sent');
+		goto('/dashboard');
 	}
 	onMount(() => {
 		let picker = document.getElementById('datePicker') as HTMLInputElement;
