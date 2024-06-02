@@ -24,7 +24,7 @@
 	> <br />
 	{#each Object.keys(data) as key}
 		<div style="border-width:1px;border-style: solid;">
-			<div>{key}</div>
+			<div>calories: {data[key]['calc_calories']}</div>
 			<div>{data[key]['meal_type']}</div>
 		</div>
 	{/each}

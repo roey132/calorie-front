@@ -13,6 +13,7 @@
 
 	/** @type {import('./$types').PageData} */
 	export let data;
+
 	onMount(async () => {
 		console.log(data);
 		product = data.product['product'];
