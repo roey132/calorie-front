@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import ListedProduct from './ListedProduct.svelte';
+	import { goto } from '$app/navigation';
 
 	let userProducts = {};
 	let systemProducts = {};
@@ -73,9 +74,26 @@
 		}
 		setSortedKeys(userProducts);
 	}
+
+	function removeProductFromList(eventObject) {
+		let productId = eventObject.detail;
+
+		console.log(sortedKeys);
+		sortedKeys = sortedKeys.filter((e) => e !== productId);
+		console.log(sortedKeys);
+
+		delete allProducts[productId];
+		delete userProducts[productId];
+		delete systemProducts[productId];
+	}
 </script>
 
-<div>products</div>
+<span>products</span>
+<button
+	on:click={() => {
+		goto('products/create');
+	}}>create new product</button
+><br />
 <input
 	on:change={onSystemChange}
 	bind:checked={showSystem}
@@ -85,10 +103,11 @@
 />
 <label for="systemProducts">Show system products</label>
 
-{#each sortedKeys as productId}
+{#each sortedKeys as productId (productId)}
 	<ListedProduct
 		{productId}
 		productName={allProducts[productId]['product_name']}
 		isSystem={allProducts[productId]['isSystem']}
+		on:deleteProduct={removeProductFromList}
 	/>
 {/each}

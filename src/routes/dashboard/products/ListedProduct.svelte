@@ -1,17 +1,24 @@
 <script>
 	import { goto } from '$app/navigation';
+	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let productName;
 	export let productId;
 	export let isSystem;
 
 	let showDelete = false;
+	let dispatch = createEventDispatcher();
 
-	function gotoEditProduct() {
-		//TODO
-	}
-	function deleteProduct() {
-		//TODO
+	async function deleteProduct() {
+		let res = await fetch(`/rust/api/products/product/delete/${productId}`);
+
+		if (!res.ok) {
+			console.error(`Error: ${res.status} ${res.statusText}`);
+			const errorText = await res.text();
+			console.error(`Error response: ${errorText}`);
+			return res.status;
+		}
+		dispatch('deleteProduct', productId);
 	}
 </script>
 
