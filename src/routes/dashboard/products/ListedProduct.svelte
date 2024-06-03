@@ -3,6 +3,8 @@
 
 	export let productName;
 	export let productId;
+	export let isSystem;
+
 	let showDelete = false;
 
 	function gotoEditProduct() {
@@ -17,21 +19,23 @@
 <span>
 	{productName}
 </span>
-<button
-	on:click={() => {
-		goto(`products/edit/${productId}`);
-	}}>edit product</button
->
-<button on:click={() => (showDelete = true)}>delete product</button>
-
-{#if showDelete}
-	<div>are you sure you want to delete {productName}</div>
-	<div>this is not reversible!</div>
-	<button on:click={deleteProduct}>yes</button>
+{#if !isSystem}
 	<button
 		on:click={() => {
-			showDelete = false;
-		}}>no</button
+			goto(`products/edit/${productId}`);
+		}}>edit product</button
 	>
+	<button on:click={() => (showDelete = true)}>delete product</button>
+
+	{#if showDelete}
+		<div>are you sure you want to delete {productName}</div>
+		<div>this is not reversible!</div>
+		<button on:click={deleteProduct}>yes</button>
+		<button
+			on:click={() => {
+				showDelete = false;
+			}}>no</button
+		>
+	{/if}
 {/if}
 <br />

@@ -10,8 +10,18 @@
 
 	onMount(() => {});
 
-	function editProduct() {
-		//TODO
+	async function editProduct() {
+		let res = await fetch('/rust/api/products/user_product/edit', {
+			method: 'POST',
+			headers: {
+				'content-type': 'application/json'
+			},
+			body: JSON.stringify({
+				product_name: productName,
+				product_id: product['product_id'],
+				calories_per_100g: Number(calories100gram)
+			})
+		});
 	}
 	function createNewMeasure() {
 		//TODO
