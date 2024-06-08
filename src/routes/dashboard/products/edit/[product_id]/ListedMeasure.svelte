@@ -1,8 +1,11 @@
 <script>
+	import { goto } from '$app/navigation';
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let measureName;
 	export let measureId;
+	export let productId;
+
 	let showDelete = false;
 
 	let dispatch = createEventDispatcher();
@@ -20,6 +23,13 @@
 </script>
 
 <span>{measureName}</span>
+<button
+	on:click={() => {
+		goto(`${productId}/measure/${measureId}/edit`);
+	}}
+>
+	edit
+</button>
 <button
 	on:click={() => {
 		showDelete = true;

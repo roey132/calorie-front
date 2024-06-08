@@ -15,7 +15,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import MeasureObject from '../MeasureObject.svelte';
+	import ListedMeasure from './ListedMeasure.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -60,9 +60,10 @@
 <button on:click={createNewMeasure}>create new measure</button>
 <br />
 {#each Object.keys(measures) as measureId (measureId)}
-	<MeasureObject
+	<ListedMeasure
 		measureId={measures[measureId]['measure_id']}
 		measureName={measures[measureId]['measure_name']}
+		productId={product['product_id']}
 		on:deleteMeasure={onMeasureDelete}
-	></MeasureObject>
+	></ListedMeasure>
 {/each}

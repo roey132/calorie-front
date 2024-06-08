@@ -9,6 +9,7 @@
 	let product = {};
 	let buttonDisabled = false;
 	let missingValues = false;
+
 	onMount(async () => {
 		let res = await fetch(`/rust/api/products/product/get/${$page.params.product_id}`);
 		let data = await res.json();
