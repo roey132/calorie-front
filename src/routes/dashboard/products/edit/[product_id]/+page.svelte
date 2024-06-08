@@ -15,6 +15,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import MeasureObject from '../MeasureObject.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -42,6 +43,11 @@
 	function createNewMeasure() {
 		goto(`${product['product_id']}/measure/create`);
 	}
+	function onMeasureDelete(measureId) {
+		delete measures[measureId.detail];
+		// updates the measures for each
+		measures = measures;
+	}
 </script>
 
 <div>editing {product['product_name']}</div>
@@ -53,6 +59,10 @@
 <span>product measures:</span>
 <button on:click={createNewMeasure}>create new measure</button>
 <br />
-{#each Object.keys(measures) as measure_id}
-	<div>{measures[measure_id]['measure_name']}</div>
+{#each Object.keys(measures) as measureId (measureId)}
+	<MeasureObject
+		measureId={measures[measureId]['measure_id']}
+		measureName={measures[measureId]['measure_name']}
+		on:deleteMeasure={onMeasureDelete}
+	></MeasureObject>
 {/each}
