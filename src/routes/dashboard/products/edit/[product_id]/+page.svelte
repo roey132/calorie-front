@@ -1,8 +1,24 @@
+<script context="module">
+	export async function load({ fetch, params }) {
+		console.log(params.product_id);
+		let productRes = await fetch(`/rust/api/products/product/get/${params.product_id}`);
+		let measuresRes = await fetch(`/rust/api/measures/product/${params.product_id}`);
+
+		let product = await productRes.json();
+		let measures = await measuresRes.json();
+
+		console.log('loaded product');
+		return { product: product, measures: measures };
+	}
+</script>
+
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
+
 	let product = data.product['product'];
 	let calories100gram = product['calories_per_gram'] * 100;
 	let productName = product['product_name'];
@@ -24,7 +40,7 @@
 		});
 	}
 	function createNewMeasure() {
-		//TODO
+		goto(`${product['product_id']}/measure/create`);
 	}
 </script>
 
