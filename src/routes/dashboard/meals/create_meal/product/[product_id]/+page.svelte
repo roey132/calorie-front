@@ -43,9 +43,7 @@
 		let mealType;
 		let requestBody = {
 			calories: countInput,
-			meal_date: date,
-			meal_name: name,
-			meal_note: note
+			meal_date: date
 		};
 		if (isMeasureSelected) {
 			mealType = 'measure';
@@ -99,8 +97,6 @@
 
 	<input bind:value={countInput} type="number" placeholder={countInfoText} /><br />
 	<input bind:value={date} id="datePicker" type="date" /><br />
-	<input bind:value={name} type="text" placeholder="enter meal name (Optional)" /><br />
-	<input bind:value={note} type="text" placeholder="enter meal note (Optional)" /><br />
 </div>
 <button disabled={createButtonDisabled} on:click={createMeal} id="create_meal_button"
 	>create meal</button

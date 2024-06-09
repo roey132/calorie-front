@@ -5,7 +5,6 @@
 	let calories: number;
 	let date: string;
 	let name: string;
-	let note: string;
 	let createButtonDisabled = false;
 
 	let missingFields = false;
@@ -25,8 +24,7 @@
 			body: JSON.stringify({
 				calories: calories,
 				meal_date: date,
-				meal_name: name,
-				meal_note: note
+				meal_name: name
 			})
 		});
 		if (!res.ok) {
@@ -57,7 +55,6 @@
 <input bind:value={calories} type="number" placeholder="enter calorie count" /><br />
 <input bind:value={date} id="datePicker" type="date" /><br />
 <input bind:value={name} type="text" placeholder="enter meal name (Optional)" /><br />
-<input bind:value={note} type="text" placeholder="enter meal note (Optional)" /><br />
 
 <button disabled={createButtonDisabled} on:click={create_calorie_meal} id="create_meal_button"
 	>create meal</button

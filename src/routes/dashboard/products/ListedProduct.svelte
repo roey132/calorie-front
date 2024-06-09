@@ -22,27 +22,28 @@
 	}
 </script>
 
-<br />
-<span>
-	{productName}
-</span>
-{#if !isSystem}
-	<button
-		on:click={() => {
-			goto(`products/edit/${productId}`);
-		}}>edit product</button
-	>
-	<button on:click={() => (showDelete = true)}>delete product</button>
-
-	{#if showDelete}
-		<div>are you sure you want to delete {productName}</div>
-		<div>this is not reversible!</div>
-		<button on:click={deleteProduct}>yes</button>
+<div style="border-width:1px;border-style: solid; margin: 1px; padding: 2px">
+	<span>
+		{productName}
+	</span>
+	{#if !isSystem}
+		<br />
 		<button
 			on:click={() => {
-				showDelete = false;
-			}}>no</button
+				goto(`products/edit/${productId}`);
+			}}>edit product</button
 		>
+		<button on:click={() => (showDelete = true)}>delete product</button>
+
+		{#if showDelete}
+			<div>are you sure you want to delete {productName}</div>
+			<div>this is not reversible!</div>
+			<button on:click={deleteProduct}>yes</button>
+			<button
+				on:click={() => {
+					showDelete = false;
+				}}>no</button
+			>
+		{/if}
 	{/if}
-{/if}
-<br />
+</div>
