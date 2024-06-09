@@ -2,21 +2,18 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
-	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
-
 	let calories: number;
 	let date: string;
 	let name: string;
 	let note: string;
 	let createButtonDisabled = false;
 
-	let missing_fields = false;
+	let missingFields = false;
 	async function create_calorie_meal() {
 		createButtonDisabled = true;
 
 		if (date == null || calories == null) {
-			missing_fields = true;
+			missingFields = true;
 			createButtonDisabled = false;
 			return;
 		}
@@ -54,7 +51,7 @@
 </script>
 
 <br />
-{#if missing_fields}
+{#if missingFields}
 	<div>make sure to fill calories and date</div>
 {/if}
 <input bind:value={calories} type="number" placeholder="enter calorie count" /><br />

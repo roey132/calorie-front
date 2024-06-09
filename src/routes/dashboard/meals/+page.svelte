@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import ListedMeal from './ListedMeal.svelte';
 	let data: any = {};
 	onMount(async () => {
 		let today = new Date().toISOString().split('T')[0];
@@ -14,6 +15,11 @@
 		data = await res.json();
 		console.log(data);
 	});
+
+	function removeMealFromObject(mealId) {
+		delete data[mealId.detail];
+		data = data;
+	}
 </script>
 
 <div>
@@ -22,10 +28,7 @@
 			goto('./meals/create_meal');
 		}}>create meal</button
 	> <br />
-	{#each Object.keys(data) as key}
-		<div style="border-width:1px;border-style: solid;">
-			<div>calories: {data[key]['calc_calories']}</div>
-			<div>{data[key]['meal_type']}</div>
-		</div>
+	{#each Object.keys(data) as key (key)}
+		<ListedMeal mealObject={data[key]} on:deleteMeal={removeMealFromObject}></ListedMeal>
 	{/each}
 </div>

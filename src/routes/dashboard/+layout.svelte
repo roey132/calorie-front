@@ -22,6 +22,16 @@
 	});
 </script>
 
+<button
+	on:click={() => {
+		goto('/dashboard/meals');
+	}}>meals</button
+><button
+	on:click={() => {
+		goto('/dashboard/products');
+	}}>products</button
+>
+<br /><br />
 {#if authenticated}
 	<slot></slot>
 {/if}

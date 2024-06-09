@@ -1,5 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
+	goto('/dashboard/meals');
 </script>
 
 <div>dashboard</div>

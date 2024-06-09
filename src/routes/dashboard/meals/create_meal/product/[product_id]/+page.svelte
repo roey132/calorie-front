@@ -4,7 +4,7 @@
 
 	let product: any = {};
 	let measures: any = {};
-	let missing_fields = false;
+	let missingFields = false;
 
 	let countInput: number = null;
 	let date: string;
@@ -37,7 +37,7 @@
 		createButtonDisabled = true;
 		if (countInput === null || date === null) {
 			createButtonDisabled = false;
-			missing_fields = true;
+			missingFields = true;
 			return;
 		}
 		let mealType;
@@ -83,7 +83,7 @@
 	>
 	<span>&nbsp;{product['product_name']}</span>
 	<br />
-	{#if missing_fields}
+	{#if missingFields}
 		<div>Make sure to fill all required fields</div>
 	{/if}
 	{#if Object.keys(measures).length > 0}
