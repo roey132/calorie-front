@@ -8,8 +8,6 @@
 
 	let countInput: number = null;
 	let date: string;
-	let name: string;
-	let note: string;
 
 	/** @type {import('./$types').PageData} */
 	export let data;
