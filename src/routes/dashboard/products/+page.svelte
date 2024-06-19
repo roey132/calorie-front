@@ -89,13 +89,9 @@
 	}
 
 	function onSystemChange() {
-		console.log('1');
 		let filteredSystemProducts = filterSystemProducts(allProducts);
-		console.log('2');
 		let filteredSearchedProducts = filterProductsSearch(filteredSystemProducts);
-		console.log('3');
 		sortKeysByName(filteredSearchedProducts);
-		console.log('4');
 	}
 
 	function filterSystemProducts(products) {
