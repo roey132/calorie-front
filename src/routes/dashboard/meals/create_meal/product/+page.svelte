@@ -1,25 +1,24 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { loadSystemProducts, loadUserProducts } from '$lib/productsUtils';
 	import { onMount } from 'svelte';
 
-	let products: any = {};
+	let allProducts = {};
+	let orderedProducts = [];
+
 	onMount(async () => {
-		let res = await fetch('/rust/api/products/user');
-		if (!res.ok) {
-			console.error(`Error: ${res.status} ${res.statusText}`);
-			const errorText = await res.text();
-			console.error(`Error response: ${errorText}`);
-			return res.status;
-		}
-		products = await res.json();
+		let systemProducts = loadSystemProducts();
+		let userProducts = loadUserProducts();
+
+		allProducts = { ...userProducts, ...systemProducts };
 	});
 </script>
 
-{#each Object.keys(products) as productId}
+{#each orderedProducts as productId}
 	<br />
 	<button
 		on:click={() => {
 			goto(`product/${productId}`);
-		}}>{products[productId]['product_name']}</button
+		}}>{allProducts[productId]['product_name']}</button
 	>
 {/each}

@@ -3,6 +3,13 @@
 	import ListedProduct from './ListedProduct.svelte';
 	import { goto } from '$app/navigation';
 	import pkg from 'lodash';
+	import {
+		loadSystemProducts,
+		loadUserProducts,
+		sortKeysByName,
+		filterSystemProducts,
+		filterProductsSearch
+	} from '$lib/productsUtils';
 	const { debounce } = pkg;
 
 	let allProducts = {};
@@ -15,7 +22,7 @@
 		console.log(systemProducts);
 
 		allProducts = { ...systemProducts, ...userProducts };
-		sortKeysByName(userProducts);
+		sortedKeys = sortKeysByName(userProducts);
 	});
 
 	let query = '';
@@ -24,84 +31,10 @@
 		onSystemChange();
 	}, 200);
 
-	function filterProductsSearch(products) {
-		if (query === '') {
-			return { ...products };
-		}
-		let filteredEntries = Object.entries(products).filter(([id, product]) =>
-			validateStringSearch(product.product_name, query)
-		);
-		let filteredProducts = Object.fromEntries(filteredEntries);
-
-		return filteredProducts;
-	}
-
-	function validateStringSearch(productName, searchValue) {
-		let queryWords = searchValue.toLowerCase().split(' ');
-		let nameWords = productName.toLowerCase().split(/[\s,]+/);
-
-		return queryWords.every((word) => nameWords.some((nameWord) => nameWord.includes(word)));
-	}
-
-	async function loadUserProducts() {
-		let res = await fetch('/rust/api/products/user');
-		if (!res.ok) {
-			console.error(`Error: ${res.status} ${res.statusText}`);
-			const errorText = await res.text();
-			console.error(`Error response: ${errorText}`);
-			return res.status;
-		}
-
-		let userProducts = await res.json();
-
-		for (let [key, value] of Object.entries(userProducts)) {
-			userProducts[key]['isSystem'] = false;
-		}
-		return userProducts;
-	}
-
-	async function loadSystemProducts() {
-		let res = await fetch('/rust/api/products/system');
-		if (!res.ok) {
-			console.error(`Error: ${res.status} ${res.statusText}`);
-			const errorText = await res.text();
-			console.error(`Error response: ${errorText}`);
-			return res.status;
-		}
-
-		let systemProducts = await res.json();
-
-		for (let [key, value] of Object.entries(systemProducts)) {
-			systemProducts[key]['isSystem'] = true;
-		}
-
-		return systemProducts;
-	}
-
-	function sortKeysByName(objectToSort) {
-		if (Object.keys(objectToSort).length === 0) {
-			sortedKeys = [];
-			return;
-		}
-		sortedKeys = Object.keys(objectToSort).sort((key1, key2) => {
-			return objectToSort[key1].product_name.localeCompare(objectToSort[key2].product_name);
-		});
-	}
-
 	function onSystemChange() {
-		let filteredSystemProducts = filterSystemProducts(allProducts);
-		let filteredSearchedProducts = filterProductsSearch(filteredSystemProducts);
-		sortKeysByName(filteredSearchedProducts);
-	}
-
-	function filterSystemProducts(products) {
-		if (showSystem) {
-			return { ...allProducts };
-		}
-		let filteredProducts = Object.fromEntries(
-			Object.entries(products).filter(([id, product]) => product.isSystem === false)
-		);
-		return filteredProducts;
+		let filteredSystemProducts = filterSystemProducts(allProducts, showSystem);
+		let filteredSearchedProducts = filterProductsSearch(filteredSystemProducts, query);
+		sortedKeys = sortKeysByName(filteredSearchedProducts);
 	}
 
 	function handleInput(event) {
