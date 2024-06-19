@@ -2,24 +2,46 @@
 	import { onMount } from 'svelte';
 	import ListedProduct from './ListedProduct.svelte';
 	import { goto } from '$app/navigation';
+	import pkg from 'lodash';
+	const { debounce } = pkg;
 
-	let userProducts = {};
-	let systemProducts = {};
 	let allProducts = {};
 	let sortedKeys = [];
 	let showSystem = false;
 
 	onMount(async () => {
-		await loadUserProducts();
-		await loadSystemProducts();
+		let userProducts = await loadUserProducts();
+		let systemProducts = await loadSystemProducts();
+		console.log(systemProducts);
 
 		allProducts = { ...systemProducts, ...userProducts };
-		console.log(allProducts);
-
-		setSortedKeys(userProducts);
-
-		console.log(sortedKeys);
+		sortKeysByName(userProducts);
 	});
+
+	let query = '';
+
+	const debouncedSearch = debounce(() => {
+		onSystemChange();
+	}, 200);
+
+	function filterProductsSearch(products) {
+		if (query === '') {
+			return { ...products };
+		}
+		let filteredEntries = Object.entries(products).filter(([id, product]) =>
+			validateStringSearch(product.product_name, query)
+		);
+		let filteredProducts = Object.fromEntries(filteredEntries);
+
+		return filteredProducts;
+	}
+
+	function validateStringSearch(productName, searchValue) {
+		let queryWords = searchValue.toLowerCase().split(' ');
+		let nameWords = productName.toLowerCase().split(/[\s,]+/);
+
+		return queryWords.every((word) => nameWords.some((nameWord) => nameWord.includes(word)));
+	}
 
 	async function loadUserProducts() {
 		let res = await fetch('/rust/api/products/user');
@@ -30,12 +52,12 @@
 			return res.status;
 		}
 
-		userProducts = await res.json();
+		let userProducts = await res.json();
 
 		for (let [key, value] of Object.entries(userProducts)) {
 			userProducts[key]['isSystem'] = false;
 		}
-		console.log(userProducts);
+		return userProducts;
 	}
 
 	async function loadSystemProducts() {
@@ -47,44 +69,56 @@
 			return res.status;
 		}
 
-		systemProducts = await res.json();
+		let systemProducts = await res.json();
 
 		for (let [key, value] of Object.entries(systemProducts)) {
 			systemProducts[key]['isSystem'] = true;
 		}
 
-		console.log(systemProducts);
+		return systemProducts;
 	}
 
-	function setSortedKeys(objectToSort) {
+	function sortKeysByName(objectToSort) {
 		if (Object.keys(objectToSort).length === 0) {
+			sortedKeys = [];
 			return;
 		}
-
 		sortedKeys = Object.keys(objectToSort).sort((key1, key2) => {
 			return objectToSort[key1].product_name.localeCompare(objectToSort[key2].product_name);
 		});
 	}
 
 	function onSystemChange() {
-		console.log(showSystem);
-		if (!showSystem) {
-			setSortedKeys(allProducts);
-			return;
+		console.log('1');
+		let filteredSystemProducts = filterSystemProducts(allProducts);
+		console.log('2');
+		let filteredSearchedProducts = filterProductsSearch(filteredSystemProducts);
+		console.log('3');
+		sortKeysByName(filteredSearchedProducts);
+		console.log('4');
+	}
+
+	function filterSystemProducts(products) {
+		if (showSystem) {
+			return { ...allProducts };
 		}
-		setSortedKeys(userProducts);
+		let filteredProducts = Object.fromEntries(
+			Object.entries(products).filter(([id, product]) => product.isSystem === false)
+		);
+		return filteredProducts;
+	}
+
+	function handleInput(event) {
+		query = event.target.value;
+		debouncedSearch();
 	}
 
 	function removeProductFromList(eventObject) {
 		let productId = eventObject.detail;
 
-		console.log(sortedKeys);
 		sortedKeys = sortedKeys.filter((e) => e !== productId);
-		console.log(sortedKeys);
 
 		delete allProducts[productId];
-		delete userProducts[productId];
-		delete systemProducts[productId];
 	}
 </script>
 
@@ -94,15 +128,15 @@
 		goto('products/create');
 	}}>create new product</button
 ><br />
+<input type="text" placeholder="Search..." on:input={handleInput} />
 <input
-	on:change={onSystemChange}
 	bind:checked={showSystem}
+	on:change={onSystemChange}
 	type="checkbox"
 	name="systemProducts"
 	id="systemProducts"
 />
 <label for="systemProducts">Show system products</label>
-
 {#each sortedKeys as productId (productId)}
 	<ListedProduct
 		{productId}
