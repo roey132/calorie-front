@@ -7,25 +7,31 @@
 
 	let data: any = {};
 	let today = new Date();
-	let currDate = today.toISOString().split('T')[0];
+	let currDate = '';
 	let totalCalories = 0;
-	selectedDate.set(currDate);
 
 	onMount(async () => {
-		let today = new Date().toISOString().split('T')[0];
-		await getMealsData(today);
+		selectedDate.subscribe((value) => {
+			currDate = value;
+		});
+
+		if (currDate === '') {
+			currDate = today.toISOString().split('T')[0];
+		}
+
+		await getMealsData(currDate);
 	});
 
 	function removeMealFromObject(mealId) {
 		delete data[mealId.detail];
 		data = data;
 	}
+
 	let nextDateButtonDisalbed = true;
 	let backDateButtonDisalbed = false;
 
 	$: {
 		currDate = currDate;
-
 		nextDateButtonDisalbed = currDate === today.toISOString().split('T')[0];
 
 		let minDate = new Date();
