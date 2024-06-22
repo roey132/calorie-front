@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { selectedDate } from '$lib/stores';
 
 	let product: any = {};
 	let measures: any = {};
@@ -13,15 +14,12 @@
 	export let data;
 
 	onMount(async () => {
-		console.log(data);
 		product = data.product['product'];
 		measures = data.measures;
 
-		let today = new Date();
-		date = today.toISOString().split('T')[0];
-
-		console.log(product);
-		console.log(measures);
+		selectedDate.subscribe((value) => {
+			date = value;
+		});
 	});
 
 	let selectedMeasureId = null;

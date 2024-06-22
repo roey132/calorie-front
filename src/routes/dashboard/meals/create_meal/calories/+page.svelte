@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { selectedDate } from '$lib/stores';
 
 	let calories: number;
 	let date: string;
@@ -37,12 +38,9 @@
 		goto('/dashboard');
 	}
 	onMount(() => {
-		let picker = document.getElementById('datePicker') as HTMLInputElement;
-		if (picker != null) {
-			let today = new Date();
-			date = today.toISOString().split('T')[0];
-			picker.valueAsDate = today;
-		}
+		selectedDate.subscribe((value) => {
+			date = value;
+		});
 	});
 
 	$: console.log(date);
