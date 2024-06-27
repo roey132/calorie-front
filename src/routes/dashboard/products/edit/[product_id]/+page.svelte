@@ -22,6 +22,15 @@
 
 	let product = data.product['product'];
 	let calories100gram = product['calories_per_gram'] * 100;
+	let protein100gram = product['protein_per_gram']
+		? product['protein_per_gram'] * 100
+		: product['protein_per_gram'];
+	let carbs100gram = product['carbs_per_gram']
+		? product['carbs_per_gram'] * 100
+		: product['carbs_per_gram'];
+	let fats100gram = product['fats_per_gram']
+		? product['fats_per_gram'] * 100
+		: product['fats_per_gram'];
 	let productName = product['product_name'];
 	let measures = data.measures;
 
@@ -36,7 +45,10 @@
 			body: JSON.stringify({
 				product_name: productName,
 				product_id: product['product_id'],
-				calories_per_100g: Number(calories100gram)
+				calories_per_100g: Number(calories100gram),
+				protein_per_100g: protein100gram ? Number(protein100gram) : protein100gram,
+				carbs_per_100g: carbs100gram ? Number(carbs100gram) : carbs100gram,
+				fats_per_100g: fats100gram ? Number(fats100gram) : fats100gram
 			})
 		});
 	}
@@ -51,9 +63,12 @@
 </script>
 
 <div>editing {product['product_name']}</div>
-<input bind:value={productName} type="text" />
-<input bind:value={calories100gram} type="text" />
-
+<input bind:value={productName} type="text" /><br />
+<input bind:value={calories100gram} type="text" /><br />
+<input bind:value={protein100gram} type="number" placeholder="protein per 100 gram (optional)" /><br
+/>
+<input bind:value={carbs100gram} type="number" placeholder="carbs per 100 gram (optional)" /><br />
+<input bind:value={fats100gram} type="number" placeholder="fats per 100 gram (optional)" /><br />
 <button on:click={editProduct}>edit</button>
 <br /><br />
 <span>product measures:</span>

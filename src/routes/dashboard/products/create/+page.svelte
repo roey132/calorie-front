@@ -3,6 +3,9 @@
 
 	let productName;
 	let calories100gram;
+	let protein100gram;
+	let carbs100gram;
+	let fats100gram;
 	let missingFields = false;
 	let buttonDisabled = false;
 
@@ -21,7 +24,10 @@
 			},
 			body: JSON.stringify({
 				product_name: productName,
-				calories_per_100g: Number(calories100gram)
+				calories_per_100g: Number(calories100gram),
+				protein_per_100g: protein100gram ? Number(protein100gram) : protein100gram,
+				carbs_per_100g: carbs100gram ? Number(carbs100gram) : carbs100gram,
+				fats_per_100g: fats100gram ? Number(fats100gram) : fats100gram
 			})
 		});
 
@@ -40,7 +46,14 @@
 {#if missingFields}
 	<div>make sure to fill all values correctly</div>
 {/if}
-<input bind:value={productName} type="text" placeholder="product name" />
-<input bind:value={calories100gram} type="number" placeholder="calories per 100 gram" />
+<input bind:value={productName} type="text" placeholder="product name" /><br />
+<input
+	bind:value={calories100gram}
+	type="number"
+	placeholder="calories per 100 gram (optional)"
+/><br />
+<input bind:value={protein100gram} type="number" placeholder="protein per 100 gram (optional)" />
 <br />
+<input bind:value={carbs100gram} type="number" placeholder="carbs per 100 gram (optional)" /><br />
+<input bind:value={fats100gram} type="number" placeholder="fats per 100 gram (optional)" /><br />
 <button disabled={buttonDisabled} on:click={createProduct}>create product</button>

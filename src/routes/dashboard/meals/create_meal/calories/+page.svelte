@@ -4,6 +4,10 @@
 	import { selectedDate } from '$lib/stores';
 
 	let calories: number;
+	let protein: number;
+	let carbs: number;
+	let fats: number;
+
 	let date: string;
 	let name: string;
 	let createButtonDisabled = false;
@@ -24,6 +28,9 @@
 			},
 			body: JSON.stringify({
 				calories: calories,
+				protein: protein,
+				carbs: carbs,
+				fats: fats,
 				meal_date: date,
 				meal_name: name
 			})
@@ -51,6 +58,10 @@
 	<div>make sure to fill calories and date</div>
 {/if}
 <input bind:value={calories} type="number" placeholder="enter calorie count" /><br />
+<input bind:value={protein} type="number" placeholder="enter protein (g)" /><br />
+<input bind:value={carbs} type="number" placeholder="enter carbs (g)" /><br />
+<input bind:value={fats} type="number" placeholder="enter fats (g)" /><br />
+
 <input bind:value={date} id="datePicker" type="date" /><br />
 <input bind:value={name} type="text" placeholder="enter meal name (Optional)" /><br />
 
